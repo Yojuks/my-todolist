@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Task from './Task'
 
 // let tasks = [{// id: new Date(),
 //         title: 'title',
@@ -12,27 +13,31 @@ class CreateTasks extends Component {
             tasks: [
                 {
                     title: 'learn JS',
-                    // isDone: isDone
+                    // isDone: isDone,
+                    id: new Date()
                 },
                 {
                     title: 'learn React',
-                    // isDone: isDone
+                    // isDone: isDone,
+                    id: new Date()
                 },
             ]
         }
+    }
+
+    createTask(e) {
+        this.setState({
+            tasks: [...this.state.tasks, e.currentTarget.value]
+        })
     }
             
     render () {
         return ( 
         <div className='wrapper'>
             <input type="text" placeholder='enter task'/>
-            <div className='tasks'>
+            <div className='tasks' key={this.state.tasks.id}>
                 {this.state.tasks.map((item) => {
-                    return <div>
-                                {item.title}    
-                            </div>
-                       
-                    
+                    return <Task task={this.state.tasks} key={this.state.tasks.id}/>
                 })}
             </div>
         </div>
