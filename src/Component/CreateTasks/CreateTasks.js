@@ -9,35 +9,38 @@ import Task from './Task'
 class CreateTasks extends Component {
     constructor() {
         super()
+        this.newIndex = 2
         this.state = {
             tasks: [
-                {
+                {   
                     title: 'learn JS',
                     // isDone: isDone,
-                    id: new Date()
+                    id: 1
                 },
                 {
                     title: 'learn React',
                     // isDone: isDone,
-                    id: new Date()
+                    id: 2
                 },
             ]
         }
     }
 
     createTask(e) {
-        this.setState({
-            tasks: [...this.state.tasks, e.currentTarget.value]
+        if (e.key === 'Enter') {
+            this.setState({
+            tasks: [...this.state.tasks, {title: e.currentTarget.value, isDone: false}]
         })
+        }
     }
             
     render () {
         return ( 
         <div className='wrapper'>
-            <input type="text" placeholder='enter task'/>
+            <input type="text" placeholder='enter task' onKeyPress={this.createTask.bind(this)}/>
             <div className='tasks' key={this.state.tasks.id}>
-                {this.state.tasks.map((item) => {
-                    return <Task task={this.state.tasks} key={this.state.tasks.id}/>
+                { this.state.tasks.map((item) => {
+                    return <Task task={item} key={item.id}/>
                 })}
             </div>
         </div>
