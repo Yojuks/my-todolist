@@ -1,12 +1,6 @@
 import React, {Component} from 'react';
 
 class Task extends Component {
-    constructor(props) {
-        super(props)
-        // console.log(this.props.task.id);
-    }
-    
-
     render () {
         return (
             <div className='task'>

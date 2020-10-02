@@ -22,22 +22,32 @@ class CreateTasks extends Component {
                     // isDone: isDone,
                     id: 2
                 },
-            ]
+
+            ],
+            inputValue: ''
         }
     }
 
-    createTask(e) {
-        if (e.key === 'Enter') {
-            this.setState({
-            tasks: [...this.state.tasks, {title: e.currentTarget.value, isDone: false}]
-        })
+        createTask(e) {
+            if (e.key === 'Enter') {
+                this.setState({
+                tasks: [...this.state.tasks, {title: e.currentTarget.value, isDone: false}],
+                inputValue: ''
+            })
         }
+    }
+    
+    onChange = (e) => {
+        this.setState({
+            ...this.state.tasks,
+            inputValue: e.currentTarget.value
+        })
     }
             
     render () {
-        return ( 
+        return (
         <div className='wrapper'>
-            <input type="text" placeholder='enter task' onKeyPress={this.createTask.bind(this)}/>
+            <input type="text" placeholder='enter task' onChange={this.onChange} value={this.state.inputValue} onKeyPress={this.createTask.bind(this)}/>
             <div className='tasks' key={this.state.tasks.id}>
                 { this.state.tasks.map((item) => {
                     return <Task task={item} key={item.id}/>
