@@ -46,7 +46,7 @@ class CreateTasks extends Component {
   };
 
   deleteTask = (taskId) => {
-      // console.log(taskId);
+    // console.log(taskId);
     const newTaskList = this.state.tasks.filter((task) => {
       return task.id !== taskId;
     });
@@ -60,16 +60,16 @@ class CreateTasks extends Component {
     const newMainObject = [...this.state.tasks]
 
     newMainObject.forEach((t) => {
-        // console.log('t.id', t.id, 'task.id', task.id);
-        if (t.id === task.id) {
-            // console.log('t.isDone', t.isDone, 'task.isDone', task.isDone);
-            t.isDone = task.isDone
-            return
-        }
-  
-        this.setState({
-            tasks: newMainObject
-        })
+      // console.log('t.id', t.id, 'task.id', task.id);
+      if (t.id === task.id) {
+        // console.log('t.isDone', t.isDone, 'task.isDone', task.isDone);
+        t.isDone = task.isDone
+        return
+      }
+
+      this.setState({
+        tasks: newMainObject
+      })
     })
   };
 
@@ -86,17 +86,20 @@ class CreateTasks extends Component {
     })
   }
 
-  filteredList = () => {
-    let {tasks, filter} = this.state
-    let filteredTasks = []
-    console.log(filteredTasks);
-    if (filter === 'all') filteredTasks = tasks
-    if (filter === 'active') filteredTasks = tasks.filter((task) => !task.isDone)
-    if (filter === 'completed') filteredTasks = tasks.filter((task) => task.isDone)
+  getItems = (filterValue) => {
+    const { tasks } = this.state
+    if (filterValue === 'all') return tasks
+    if (filterValue === 'active') {
+      return tasks.filter(task => task.isDone === false)
+    }
+    if (filterValue === 'completed') {
+      return tasks.filter(task => task.isDone === true)
+    }
   }
 
-
   render() {
+    const { filter } = this.state
+    const tasks = this.getItems(filter)
     return (
       <div className="wrapper">
         <input
@@ -107,25 +110,24 @@ class CreateTasks extends Component {
           onKeyPress={this.createTask}
         />
         <div className="tasks">
-          {this.state.tasks.map((item) => {
+          {tasks.map((item) => {
             return (
               <div>
                 <Task task={item}
-                      key={item.id}
-                      deleteTask={this.deleteTask}
-                      updateTask={this.updateTask}
-                  />
+                  key={item.id}
+                  deleteTask={this.deleteTask}
+                  updateTask={this.updateTask}
+                />
               </div>
             );
           })}
         </div>
-        <ToDoListFooter 
+        <ToDoListFooter
           tasks={this.state.tasks}
           filter={this.state.filter}
           onFilterChanged={this.changeFilter.bind(this)}
           clearCompleted={this.clearCompleted.bind(this)}
-          filteredList={this.filteredList}
-          />
+        />
       </div>
     );
   }
