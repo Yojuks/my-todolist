@@ -2,8 +2,7 @@
   margin: 0 auto;
   padding: 50px;
   background-color: beige;
-  border: 1px solid #ff8c00;
-  width: 400px;
+  width: 600px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -29,4 +28,23 @@ p .task-input {
 }
 .is-done {
   text-decoration: line-through;
+}
+
+.task .ant-checkbox-wrapper {
+  margin-bottom: 5%;
+}
+.buttons Button {
+  margin-left: 15px;
+}
+.items-left {
+  display: block;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+}
+.completed {
+  display: block;
+  margin-left: 10px;
 }

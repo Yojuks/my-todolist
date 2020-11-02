@@ -1,17 +1,12 @@
 import React, { Component } from "react";
 import Task from "./Task";
 import ToDoListFooter from './ToDoListFooter'
-
-import Checkbox from './Checkbox'
-// let tasks = [{// id: new Date(),
-//         title: 'title',
-//         isDone: 'isDone'
-// }]
+import { Input } from "antd";
+import "antd/dist/antd.css";
 
 class CreateTasks extends Component {
   constructor() {
     super();
-    // this.newIndex = 2
     this.state = {
       tasks: [
         {
@@ -21,8 +16,8 @@ class CreateTasks extends Component {
         },
       ],
       inputValue: "",
-      filter: 'all'
-      // newIndex: 2
+      // filter: 'all',
+      filter: null
     };
   }
 
@@ -46,7 +41,6 @@ class CreateTasks extends Component {
   };
 
   deleteTask = (taskId) => {
-    // console.log(taskId);
     const newTaskList = this.state.tasks.filter((task) => {
       return task.id !== taskId;
     });
@@ -56,13 +50,10 @@ class CreateTasks extends Component {
   };
 
   updateTask = (task) => {
-    // console.log('task', task);
     const newMainObject = [...this.state.tasks]
 
     newMainObject.forEach((t) => {
-      // console.log('t.id', t.id, 'task.id', task.id);
       if (t.id === task.id) {
-        // console.log('t.isDone', t.isDone, 'task.isDone', task.isDone);
         t.isDone = task.isDone
         return
       }
@@ -73,14 +64,20 @@ class CreateTasks extends Component {
     })
   };
 
-  changeFilter(filterValue) {
+  // changeFilter(filterValue) {
+  //   console.log(filterValue);
+  //   this.setState({
+  //     filter: filterValue
+  //   })
+  // }
+  changeFilter = (filterValue) => {
     console.log(filterValue);
     this.setState({
       filter: filterValue
     })
   }
 
-  clearCompleted() {
+  clearCompleted = () => {
     this.setState({
       tasks: this.state.tasks.filter((t) => !t.isDone)
     })
@@ -88,11 +85,11 @@ class CreateTasks extends Component {
 
   getItems = (filterValue) => {
     const { tasks } = this.state
-    if (filterValue === 'all') return tasks
-    if (filterValue === 'active') {
+    if (filterValue === null ) return tasks
+    if (filterValue === true ) {
       return tasks.filter(task => task.isDone === false)
     }
-    if (filterValue === 'completed') {
+    if (filterValue === false) {
       return tasks.filter(task => task.isDone === true)
     }
   }
@@ -102,7 +99,8 @@ class CreateTasks extends Component {
     const tasks = this.getItems(filter)
     return (
       <div className="wrapper">
-        <input
+        <h1 >To Do List</h1>
+        <Input 
           type="text"
           placeholder="Enter task"
           onChange={this.onChange}
@@ -124,9 +122,8 @@ class CreateTasks extends Component {
         </div>
         <ToDoListFooter
           tasks={this.state.tasks}
-          filter={this.state.filter}
-          onFilterChanged={this.changeFilter.bind(this)}
-          clearCompleted={this.clearCompleted.bind(this)}
+          onFilterChanged={this.changeFilter}
+          clearCompleted={this.clearCompleted}
         />
       </div>
     );

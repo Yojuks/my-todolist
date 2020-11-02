@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Checkbox } from "antd";
+import "antd/dist/antd.css";
 
 class Task extends Component {
   constructor(props) {
@@ -13,7 +15,6 @@ class Task extends Component {
   };
   
   updateTask = () => {
-    // console.log(this.props.task.id); // тут співпадає 
     var task = {
         ...this.props.task
     }
@@ -23,7 +24,7 @@ class Task extends Component {
 
   render() {
     const {tasks, filter} = this.props
-    
+
     let filteredTasks = []
     console.log(filteredTasks);
     if (filter === 'all') filteredTasks = tasks
@@ -32,7 +33,8 @@ class Task extends Component {
 
     return (
       <div className="task">
-        <input
+        <Checkbox
+          // className='checkbox'
           type="checkbox"
           defaultChecked={this.props.checked}
           onClick={this.updateTask}

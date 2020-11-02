@@ -1,47 +1,46 @@
 import React, { Component } from "react";
+import { Button } from "antd";
+import "antd/dist/antd.css";
 
 class ToDoListFooter extends Component {
 
-  handleFilterChanged(e) {
-      this.props.onFilterChanged(e.currentTarget.dataset.value)
-  }
-
   render() {
-    let {tasks, filter} = this.props
+    let {tasks} = this.props
     
     return (
       <div className="todolist-footer">
-        <div>
-          <span>
-            {tasks.filter((t) => !t.isDone).length} items left{" "}
-          </span>
-        </div>
         <div className="buttons">
-          <button
-            className={filter.value === 'all' ? 'selected' : ""}
-            onClick={this.handleFilterChanged.bind(this)}
-            data-value="all"
+          <div>
+            <span className='items-left'>
+              {tasks.filter((t) => !t.isDone).length} items left
+            </span>
+          </div>
+          <Button
+            // className={filter.value === 'all' ? 'selected' : ""}
+            onClick={() => this.props.onFilterChanged(null)}
+            // data-value="all"
           >
             All
-          </button>
-          <button
-            className={filter.value === 'active' ? 'selected' : ""}
-            onClick={this.handleFilterChanged.bind(this)}
-            data-value="active"
+          </Button>
+          <Button
+            // className={filter.value === 'active' ? 'selected' : ""}
+            onClick={() => this.props.onFilterChanged(true)}
+            // data-value="active"
           >
             Active
-          </button>
-          <button
-            className={filter.value === 'completed' ? 'selected' : ""}
-            onClick={this.handleFilterChanged.bind(this)}
-            data-value="completed"
+          </Button>
+          <Button
+            // className={filter.value === 'completed' ? 'selected' : ""}
+            onClick={() => this.props.onFilterChanged(false)}
+            // data-value="completed"
           >
             Completed
-          </button>
+          </Button>
+          <div>
+            <span className='completed' onClick={this.props.clearCompleted}>Clear completed</span> 
         </div>
-        <div>
-            <span onClick={this.props.clearCompleted}>Clear completed</span> 
         </div>
+       
       </div>
     );
   }
