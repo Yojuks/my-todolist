@@ -8,20 +8,27 @@
   align-items: center;
   flex-direction: column;
 }
-.wrapper input {
+.wrapper > input {
   border: 1px solid #ff8c00;
   text-align: center;
   padding: 10px;
+  width: 92%;
+  margin-bottom: 30px;
 }
 
 .task {
   display: flex;
   align-items: center;
+  justify-content: space-around;
 }
 p .task-input {
   background-color: beige;
   border: none;
   font-size: 18px;
+  width: 400px;
+  margin-left: 16px;
+  margin-right: 20px;
+  text-align: center;
 }
 .close {
   font-size: 14px;
@@ -31,7 +38,7 @@ p .task-input {
 }
 
 .task .ant-checkbox-wrapper {
-  margin-bottom: 5%;
+  margin-bottom: 70%;
 }
 .buttons Button {
   margin-left: 15px;
@@ -47,4 +54,7 @@ p .task-input {
 .completed {
   display: block;
   margin-left: 10px;
+}
+.ant-input {
+  width: 92%;
 }

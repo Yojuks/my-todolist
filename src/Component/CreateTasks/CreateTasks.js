@@ -110,13 +110,13 @@ class CreateTasks extends Component {
         <div className="tasks">
           {tasks.map((item) => {
             return (
-              <div>
+              
                 <Task task={item}
                   key={item.id}
                   deleteTask={this.deleteTask}
                   updateTask={this.updateTask}
                 />
-              </div>
+              
             );
           })}
         </div>

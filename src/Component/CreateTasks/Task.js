@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Checkbox } from "antd";
+import { DeleteOutlined } from '@ant-design/icons';
 import "antd/dist/antd.css";
 
 class Task extends Component {
@@ -33,22 +34,27 @@ class Task extends Component {
 
     return (
       <div className="task">
-        <Checkbox
-          // className='checkbox'
-          type="checkbox"
-          defaultChecked={this.props.checked}
-          onClick={this.updateTask}
-        />
-        <p>
-          <input type="text" value={this.props.task.title}
-            checked={this.props.task.isDone}
-            className={this.props.task.isDone ? "task-input is-done " : "task-input "}
-            onChange={(e) => {this.props.updateTask(e.target.value)}}
-          />
-          <span className="close" onClick={this.deleteTask}>
-            x
-          </span>
-        </p>
+        <div>
+          <Checkbox
+              // className='checkbox'
+              type="checkbox"
+              defaultChecked={this.props.checked}
+              onClick={this.updateTask}
+            />
+        </div>
+        <div>
+          <p>
+            <input type="text" value={this.props.task.title}
+              checked={this.props.task.isDone}
+              className={this.props.task.isDone ? "task-input is-done" : "task-input"}
+              onChange={(e) => {this.props.updateTask(e.target.value)}}
+            />
+            <span className="close" onClick={this.deleteTask}>
+              <DeleteOutlined color='red'/>
+            </span>
+          </p>
+        </div>
+       
       </div>
     );
   }
