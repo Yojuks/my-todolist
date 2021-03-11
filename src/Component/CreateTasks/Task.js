@@ -1,12 +1,15 @@
 import React, { Component } from "react";
-import { Checkbox } from "antd";
-import { DeleteOutlined } from '@ant-design/icons';
+import { Checkbox, Input } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
 
 class Task extends Component {
   constructor(props) {
     super(props);
-
+    this.state = {
+      active: false,
+      title: props.task.title
+    };
     this.parentDeleteCallback = props.deleteTask;
     this.parentUpdateCallback = props.updateTask;
   }
@@ -14,47 +17,84 @@ class Task extends Component {
   deleteTask = () => {
     this.parentDeleteCallback(this.props.task.id);
   };
-  
-  updateTask = () => {
-    var task = {
-        ...this.props.task
-    }
-    task.isDone = !task.isDone
-    this.parentUpdateCallback(task);
-  };
 
   render() {
-    const {tasks, filter} = this.props
+    const { tasks, filter } = this.props;
 
-    let filteredTasks = []
-    console.log(filteredTasks);
-    if (filter === 'all') filteredTasks = tasks
-    if (filter === 'active') filteredTasks = tasks.filter((task) => !task.isDone)
-    if (filter === 'completed') filteredTasks = tasks.filter((task) => task.isDone)
+    let filteredTasks = [];
+    if (filter === "all") filteredTasks = tasks;
+    if (filter === "active")
+      filteredTasks = tasks.filter((task) => !task.isDone);
+    if (filter === "completed")
+      filteredTasks = tasks.filter((task) => task.isDone);
 
     return (
       <div className="task">
         <div>
           <Checkbox
-              // className='checkbox'
-              type="checkbox"
-              defaultChecked={this.props.checked}
-              onClick={this.updateTask}
-            />
+            type="checkbox"
+            defaultChecked={false}
+            checked={this.props.task.isDone}
+            onChange={(e) => {
+              this.props.updateTask({isDone: e.target.checked}, this.props.task.id)
+            }}
+          />
         </div>
-        <div>
-          <p>
-            <input type="text" value={this.props.task.title}
+        <div className='div-before-span'>
+          {this.state.active ? (
+            <Input
+              type="text"
+              value={ this.state.title }
+              // disabled={true}
               checked={this.props.task.isDone}
-              className={this.props.task.isDone ? "task-input is-done" : "task-input"}
-              onChange={(e) => {this.props.updateTask(e.target.value)}}
-            />
-            <span className="close" onClick={this.deleteTask}>
-              <DeleteOutlined color='red'/>
+              className={
+                this.props.task.isDone ? "task-input is-done" : "task-input color-red"
+            }
+            onBlur={(e) => {
+              this.props.updateTask({
+                title: e.target.value
+              }, this.props.task.id)
+              this.setState({
+                ...this.state, 
+                active: false
+              })
+            }}
+            
+            onPressEnter={(e) => {
+              this.props.updateTask({
+                title: e.target.value
+              }, this.props.task.id)
+              this.setState({
+                ...this.state, 
+                active: false
+              })
+            }}
+            onChange={(e) => {
+              this.setState({
+                ...this.state,
+                title: e.target.value
+              })
+            }}
+          />
+          ) : (
+            <span className='input-span'
+              onClick={() => {
+                this.setState({
+                  ...this.state,
+                  active: true
+                })
+              }}
+            >
+              {
+                this.props.task.title
+              }
             </span>
-          </p>
+          )}
+
+          <span className="close" onClick={this.deleteTask}>
+            <DeleteOutlined color="red" />
+          </span>
         </div>
-       
       </div>
     );
   }

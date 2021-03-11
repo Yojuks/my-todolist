@@ -16,7 +16,6 @@ class CreateTasks extends Component {
         },
       ],
       inputValue: "",
-      // filter: 'all',
       filter: null
     };
   }
@@ -49,27 +48,27 @@ class CreateTasks extends Component {
     });
   };
 
-  updateTask = (task) => {
-    const newMainObject = [...this.state.tasks]
-
-    newMainObject.forEach((t) => {
-      if (t.id === task.id) {
-        t.isDone = task.isDone
-        return
-      }
+  updateTask = (task, id) => {
+    console.log(task, id)
+    // const newMainObject = [...this.state.tasks]
+    // newMainObject.forEach((t) => {
+    //   if (t.id === task.id) {
+    //     t.isDone = task.isDone
+    //   }
 
       this.setState({
-        tasks: newMainObject
+        tasks: this.state.tasks.map(item => {
+          if (item.id === id) {
+            return ({
+              ...item,
+              ...task
+            })
+          }
+          return {...item}
+        })
       })
-    })
-  };
+  }
 
-  // changeFilter(filterValue) {
-  //   console.log(filterValue);
-  //   this.setState({
-  //     filter: filterValue
-  //   })
-  // }
   changeFilter = (filterValue) => {
     console.log(filterValue);
     this.setState({
@@ -110,13 +109,12 @@ class CreateTasks extends Component {
         <div className="tasks">
           {tasks.map((item) => {
             return (
-              
                 <Task task={item}
+                  {...item}
                   key={item.id}
                   deleteTask={this.deleteTask}
                   updateTask={this.updateTask}
                 />
-              
             );
           })}
         </div>
