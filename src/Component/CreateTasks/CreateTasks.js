@@ -1,33 +1,33 @@
-import React, { Component } from "react";
-import Task from "./Task";
-import ToDoListFooter from './ToDoListFooter'
-import { Input } from "antd";
-import "antd/dist/antd.css";
+import React, { Component } from 'react';
+import Task from './Task';
+import ToDoListFooter from './ToDoListFooter';
+import { Input } from 'antd';
+import 'antd/dist/antd.css';
 
 class CreateTasks extends Component {
   constructor() {
-    super();
+    // super();
     this.state = {
       tasks: [
         {
-          title: "learn JS",
+          title: 'learn JS',
           isDone: false,
           id: Date.now(),
         },
       ],
-      inputValue: "",
-      filter: null
+      inputValue: '',
+      filter: null,
     };
   }
 
   createTask = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       this.setState({
         tasks: [
           ...this.state.tasks,
           { title: e.currentTarget.value, isDone: false, id: Date.now() },
         ],
-        inputValue: "",
+        inputValue: '',
       });
     }
   };
@@ -49,57 +49,57 @@ class CreateTasks extends Component {
   };
 
   updateTask = (task, id) => {
-    console.log(task, id)
+    console.log(task, id);
     // const newMainObject = [...this.state.tasks]
     // newMainObject.forEach((t) => {
     //   if (t.id === task.id) {
     //     t.isDone = task.isDone
     //   }
 
-      this.setState({
-        tasks: this.state.tasks.map(item => {
-          if (item.id === id) {
-            return ({
-              ...item,
-              ...task
-            })
-          }
-          return {...item}
-        })
-      })
-  }
+    this.setState({
+      tasks: this.state.tasks.map((item) => {
+        if (item.id === id) {
+          return {
+            ...item,
+            ...task,
+          };
+        }
+        return { ...item };
+      }),
+    });
+  };
 
   changeFilter = (filterValue) => {
     console.log(filterValue);
     this.setState({
-      filter: filterValue
-    })
-  }
+      filter: filterValue,
+    });
+  };
 
   clearCompleted = () => {
     this.setState({
-      tasks: this.state.tasks.filter((t) => !t.isDone)
-    })
-  }
+      tasks: this.state.tasks.filter((t) => !t.isDone),
+    });
+  };
 
   getItems = (filterValue) => {
-    const { tasks } = this.state
-    if (filterValue === null ) return tasks
-    if (filterValue === true ) {
-      return tasks.filter(task => task.isDone === false)
+    const { tasks } = this.state;
+    if (filterValue === null) return tasks;
+    if (filterValue === true) {
+      return tasks.filter((task) => task.isDone === false);
     }
     if (filterValue === false) {
-      return tasks.filter(task => task.isDone === true)
+      return tasks.filter((task) => task.isDone === true);
     }
-  }
+  };
 
   render() {
-    const { filter } = this.state
-    const tasks = this.getItems(filter)
+    const { filter } = this.state;
+    const tasks = this.getItems(filter);
     return (
       <div className="wrapper">
-        <h1 >To Do List</h1>
-        <Input 
+        <h1>To Do List</h1>
+        <Input
           type="text"
           placeholder="Enter task"
           onChange={this.onChange}
@@ -109,12 +109,13 @@ class CreateTasks extends Component {
         <div className="tasks">
           {tasks.map((item) => {
             return (
-                <Task task={item}
-                  {...item}
-                  key={item.id}
-                  deleteTask={this.deleteTask}
-                  updateTask={this.updateTask}
-                />
+              <Task
+                task={item}
+                {...item}
+                key={item.id}
+                deleteTask={this.deleteTask}
+                updateTask={this.updateTask}
+              />
             );
           })}
         </div>
