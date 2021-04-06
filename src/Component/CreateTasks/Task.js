@@ -1,3 +1,74 @@
+import React, { useState, useEffect } from 'react';
+import { Checkbox, Input } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
+import Title from 'antd/lib/skeleton/Title';
+
+export default function Task({ task, deleteTask, toggleSpan }) {
+  const [active, setActive] = useState(false);
+
+  return (
+    <div className="task">
+      <div>
+        <Checkbox type="checkbox" checked={task.completed} onChange={(e) => toggleSpan(task.id)} />
+      </div>
+      <div className="div-before-span">
+        {active ? (
+          <Input
+            type="text"
+            value={task.title}
+            // disabled={true}
+            checked={task.active}
+            className={task.active ? 'task-input is-done' : 'task-input color-red'}
+            // onBlur={(e) => {
+            //   updateTask(
+            //     {
+            //       title: e.target.value,
+            //     },
+            //     task.id
+            //   );
+            // setActive({
+            //   ...this.state,
+            //   active: false,
+            // });
+            // }}
+            // onPressEnter={(e) => {
+            //   updateTask(
+            //     {
+            //       title: e.target.value,
+            //     },
+            //     task.id
+            //   );
+            // this.setState({
+            //   ...this.state,
+            //   active: false,
+            // });
+            // }}
+            // onChange={(e) => {
+            //   this.setState({
+            //     ...this.state,
+            //     title: e.target.value,
+            //   });
+            // }}
+          />
+        ) : (
+          <span
+            className={task.completed ? 'input-span is-done' : 'input-span'}
+            onClick={() => {
+              setActive({ active: true });
+            }}
+          >
+            {task.title}
+          </span>
+        )}
+
+        <span className="close" onClick={() => deleteTask(task.id)}>
+          <DeleteOutlined color="red" />
+        </span>
+      </div>
+    </div>
+  );
+}
+
 // import React, { Component } from "react";
 // import { Checkbox, Input } from "antd";
 // import { DeleteOutlined } from "@ant-design/icons";

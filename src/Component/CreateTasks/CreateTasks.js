@@ -1,4 +1,71 @@
-import react from 'react';
+import React, { useState, useEffect } from 'react';
+import { Input } from 'antd';
+import Task from './Task';
+
+export default function CreateTasks() {
+  const [tasks, setTasks] = useState([]);
+  const [currnetInputValue, setCurrnetInputValue] = useState('');
+
+  function onChange(event) {
+    setCurrnetInputValue(event);
+  }
+
+  function createTask(e) {
+    if (e.key === 'Enter') {
+      setTasks(
+        tasks.concat({
+          id: Date.now(),
+          completed: false,
+          title: currnetInputValue,
+        }),
+        setCurrnetInputValue('')
+      );
+    }
+  }
+
+  function deleteTask(id) {
+    setTasks(tasks.filter((item) => item.id !== id));
+  }
+
+  function updateTask(task, id) {
+    const newMainObject = [...tasks];
+    newMainObject.forEach((item) => {
+      if (item.id === task.id) {
+        item.isDone = task.isDone;
+      }
+    });
+  }
+
+  function toggleSpan(id) {
+    setTasks(
+      tasks.map((item) => {
+        if (item.id === id) {
+          item.completed = !item.completed;
+        }
+        return item;
+      })
+    );
+  }
+
+  return (
+    <div className="wrapper">
+      <h1>To Do List</h1>
+      <Input
+        type="text"
+        placeholder="Enter task"
+        onChange={(e) => onChange(e.target.value)}
+        value={currnetInputValue}
+        onKeyPress={(e) => createTask(e)}
+      />
+
+      {tasks.map((element) => {
+        return (
+          <Task task={element} key={element.id} deleteTask={deleteTask} toggleSpan={toggleSpan} />
+        );
+      })}
+    </div>
+  );
+}
 
 // import React, { Component } from 'react';
 // import Task from './Task';
