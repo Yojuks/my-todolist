@@ -2,15 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { Input } from 'antd';
 import Task from './Task';
 import ToDoListFooter from './ToDoListFooter';
+import Loader from '../../Loader';
 
 export default function CreateTasks() {
   let [tasks, setTasks] = useState([]);
   const [currentInputValue, setCurrnetInputValue] = useState('');
   const [filter, setFilter] = useState(null);
+  const [loading, setloading] = React.useState(true);
 
   function onChange(event) {
     setCurrnetInputValue(event);
   }
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/todos?_limit=3')
+      .then((response) => response.json())
+      .then((tasks) => {
+        setTimeout(() => {
+          setTasks(tasks);
+          setloading(false);
+        }, 3000);
+      });
+  }, []);
 
   function createTask(e) {
     if (e.key === 'Enter') {
@@ -97,7 +110,8 @@ export default function CreateTasks() {
         value={currentInputValue}
         onKeyPress={(e) => createTask(e)}
       />
-
+      {loading && <Loader />}
+      {loading && <Loader />}
       {tasks.map((element) => {
         return (
           <Task
