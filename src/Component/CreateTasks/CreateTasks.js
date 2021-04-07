@@ -1,133 +1,137 @@
-import React, { Component } from "react";
-import Task from "./Task";
-import ToDoListFooter from './ToDoListFooter'
-import { Input } from "antd";
-import "antd/dist/antd.css";
+import React, { useState, useEffect } from 'react';
+import { Input } from 'antd';
+import Task from './Task';
+import ToDoListFooter from './ToDoListFooter';
+import Loader from '../../Loader';
 
-class CreateTasks extends Component {
-  constructor() {
-    super();
-    this.state = {
-      tasks: [
-        {
-          title: "learn JS",
-          isDone: false,
-          id: Date.now(),
-        },
-      ],
-      inputValue: "",
-      // filter: 'all',
-      filter: null
-    };
+export default function CreateTasks() {
+  let [tasks, setTasks] = useState([]);
+  const [currentInputValue, setCurrnetInputValue] = useState('');
+  const [filter, setFilter] = useState(null);
+  const [loading, setloading] = React.useState(true);
+
+  function onChange(event) {
+    setCurrnetInputValue(event);
   }
 
-  createTask = (e) => {
-    if (e.key === "Enter") {
-      this.setState({
-        tasks: [
-          ...this.state.tasks,
-          { title: e.currentTarget.value, isDone: false, id: Date.now() },
-        ],
-        inputValue: "",
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/todos?_limit=3')
+      .then((response) => response.json())
+      .then((tasks) => {
+        setTimeout(() => {
+          setTasks(tasks);
+          setloading(false);
+        }, 3000);
       });
+  }, []);
+
+  function createTask(e) {
+    if (e.key === 'Enter') {
+      setTasks(
+        tasks.concat({
+          id: Date.now(),
+          completed: false,
+          title: currentInputValue,
+          active: false,
+        }),
+        setCurrnetInputValue('')
+      );
     }
-  };
+  }
 
-  onChange = (e) => {
-    this.setState({
-      ...this.state.tasks,
-      inputValue: e.currentTarget.value,
-    });
-  };
+  function deleteTask(id) {
+    setTasks(tasks.filter((item) => item.id !== id));
+  }
 
-  deleteTask = (taskId) => {
-    const newTaskList = this.state.tasks.filter((task) => {
-      return task.id !== taskId;
-    });
-    this.setState({
-      tasks: newTaskList,
-    });
-  };
-
-  updateTask = (task) => {
-    const newMainObject = [...this.state.tasks]
-
-    newMainObject.forEach((t) => {
-      if (t.id === task.id) {
-        t.isDone = task.isDone
-        return
-      }
-
-      this.setState({
-        tasks: newMainObject
+  function toggleSpan(id) {
+    setTasks(
+      tasks.map((item) => {
+        if (item.id === id) {
+          item.completed = !item.completed;
+        }
+        return item;
       })
-    })
-  };
-
-  // changeFilter(filterValue) {
-  //   console.log(filterValue);
-  //   this.setState({
-  //     filter: filterValue
-  //   })
-  // }
-  changeFilter = (filterValue) => {
-    console.log(filterValue);
-    this.setState({
-      filter: filterValue
-    })
-  }
-
-  clearCompleted = () => {
-    this.setState({
-      tasks: this.state.tasks.filter((t) => !t.isDone)
-    })
-  }
-
-  getItems = (filterValue) => {
-    const { tasks } = this.state
-    if (filterValue === null ) return tasks
-    if (filterValue === true ) {
-      return tasks.filter(task => task.isDone === false)
-    }
-    if (filterValue === false) {
-      return tasks.filter(task => task.isDone === true)
-    }
-  }
-
-  render() {
-    const { filter } = this.state
-    const tasks = this.getItems(filter)
-    return (
-      <div className="wrapper">
-        <h1 >To Do List</h1>
-        <Input 
-          type="text"
-          placeholder="Enter task"
-          onChange={this.onChange}
-          value={this.state.inputValue}
-          onKeyPress={this.createTask}
-        />
-        <div className="tasks">
-          {tasks.map((item) => {
-            return (
-              
-                <Task task={item}
-                  key={item.id}
-                  deleteTask={this.deleteTask}
-                  updateTask={this.updateTask}
-                />
-              
-            );
-          })}
-        </div>
-        <ToDoListFooter
-          tasks={this.state.tasks}
-          onFilterChanged={this.changeFilter}
-          clearCompleted={this.clearCompleted}
-        />
-      </div>
     );
   }
-}
 
-export default CreateTasks;
+  function onUpdateEnd(e, id, value) {
+    if (e === 'Enter') {
+      setTasks(
+        tasks.map((item) => {
+          if (item.id === id) {
+            item.active = false;
+            item.title = value;
+          }
+          return item;
+        })
+      );
+    }
+  }
+
+  function setAct(id) {
+    setTasks(
+      tasks.map((item) => {
+        if (item.id === id) {
+          item.active = true;
+        }
+        return item;
+      })
+    );
+  }
+
+  function clearCompleted() {
+    let newTasks = tasks.filter((task) => !task.completed);
+    setTasks(newTasks);
+  }
+
+  function changeFilter(filterValue) {
+    setFilter(filterValue);
+  }
+
+  function getItems(filterValue) {
+    if (filterValue === null) return tasks;
+    if (filterValue === true) {
+      return tasks.filter((task) => task.completed === false);
+    }
+    if (filterValue === false) {
+      return tasks.filter((task) => task.completed === true);
+    }
+  }
+
+  tasks = getItems(filter);
+
+  return (
+    <div className="wrapper">
+      <h1>To Do List</h1>
+      <Input
+        type="text"
+        placeholder="Enter task"
+        onChange={(e) => onChange(e.target.value)}
+        value={currentInputValue}
+        onKeyPress={(e) => createTask(e)}
+      />
+      {loading && <Loader />}
+      {loading && <Loader />}
+      {tasks.map((element) => {
+        return (
+          <Task
+            task={element}
+            key={element.id}
+            deleteTask={deleteTask}
+            toggleSpan={toggleSpan}
+            onUpdateEnd={onUpdateEnd}
+            setTasks={setTasks}
+            setAct={setAct}
+          />
+        );
+      })}
+
+      <ToDoListFooter
+        tasks={tasks}
+        getItems={getItems}
+        changeFilter={changeFilter}
+        clearCompleted={clearCompleted}
+      />
+    </div>
+  );
+}
