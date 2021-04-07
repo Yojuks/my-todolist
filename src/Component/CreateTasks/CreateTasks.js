@@ -17,9 +17,9 @@ export default function CreateTasks() {
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/todos?_limit=3')
       .then((response) => response.json())
-      .then((tasks) => {
+      .then((todos) => {
         setTimeout(() => {
-          setTasks(tasks);
+          setTasks(todos);
           setloading(false);
         }, 3000);
       });
@@ -100,6 +100,20 @@ export default function CreateTasks() {
 
   tasks = getItems(filter);
 
+  const component = tasks.map((element) => {
+    return (
+      <Task
+        task={element}
+        key={element.id}
+        deleteTask={deleteTask}
+        toggleSpan={toggleSpan}
+        onUpdateEnd={onUpdateEnd}
+        setTasks={setTasks}
+        setAct={setAct}
+      />
+    );
+  });
+
   return (
     <div className="wrapper">
       <h1>To Do List</h1>
@@ -110,21 +124,9 @@ export default function CreateTasks() {
         value={currentInputValue}
         onKeyPress={(e) => createTask(e)}
       />
+
       {loading && <Loader />}
-      {loading && <Loader />}
-      {tasks.map((element) => {
-        return (
-          <Task
-            task={element}
-            key={element.id}
-            deleteTask={deleteTask}
-            toggleSpan={toggleSpan}
-            onUpdateEnd={onUpdateEnd}
-            setTasks={setTasks}
-            setAct={setAct}
-          />
-        );
-      })}
+      {tasks.length ? component : loading ? null : <p>'No todos'</p>}
 
       <ToDoListFooter
         tasks={tasks}
